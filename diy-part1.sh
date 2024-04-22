@@ -57,8 +57,8 @@ wget -qO- -t1 -T2 "https://api.github.com/repos/TechMgc/Openwrt/releases/latest"
 if [ -s  "/tmp/cloud_version" ]; then
 	#固件下载地址
 	new_version=`cat /tmp/cloud_version`
-	DOWNLOAD_URL=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
-	openwrtEfi=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt-efi.md5
+	DOWNLOAD_URL=https://github.com/TechMgc/Openwrt/releases/download/${new_version}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+	openwrtEfi=https://github.com/TechMgc/Openwrt/releases/download/${new_version}/openwrt-efi.md5
 else
 	echo "无法获取到云端版本号！"
 	exit 1
