@@ -92,6 +92,11 @@ jobs:
         cd openwrt/package
         git clone https://github.com/sbwml/luci-app-alist.git
 
+    - name: Op version
+      run: |
+        cd openwrt 
+        bash  opVersion.sh
+
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
@@ -144,6 +149,11 @@ jobs:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin 
 
+    - name: Delete files
+      run: |
+        cd openwrt 
+        bash  deleteFiles.sh
+
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
@@ -164,7 +174,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
+        echo "release_tag=$(cat openwrt/wget/op_version)" >> $GITHUB_OUTPUT
         echo -e "\n* The stable source code has been updated." >> release.txt
         sed -i '1i ## Firmware Update Log' release.txt
         touch release.txt
