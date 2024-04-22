@@ -22,7 +22,7 @@ md5sum $openwrt-efi > openwrt-efi.md5
 exit 0
 EOF
 
-cat>op_version.sh<<-\EOOF
+cat>opVersion.sh<<-\EOOF
 #!/bin/bash
 op_version="V`date '+%y%m%d%H%M'`" 
 echo $op_version >  files/etc/op_version  
