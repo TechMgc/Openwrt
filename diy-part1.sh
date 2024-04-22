@@ -58,7 +58,7 @@ if [ -s  "/tmp/cloud_version" ]; then
 	#固件下载地址
 	cloud_version=`cat /tmp/cloud_version`
 	DOWNLOAD_URL=https://github.com/TechMgc/Openwrt/releases/download/${cloud_version}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
-	openwrtEfi=https://github.com/TechMgc/Openwrt/releases/download/${cloud_version}/openwrt-efi.md5
+	openwrtefi=https://github.com/TechMgc/Openwrt/releases/download/${cloud_version}/openwrt-efi.md5
 else
 	echo "无法获取到云端版本号！"
 	exit 1
@@ -66,7 +66,7 @@ fi
 #md5值验证，固件类型判断
 if [ "$current_version" != "$cloud_version" ];then
 	wget -P /tmp "$DOWNLOAD_URL" -O /tmp/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
-	wget -P /tmp "$openwrtEfi" -O /tmp/openwrt-efi.md5
+	wget -P /tmp "$openwrtefi" -O /tmp/openwrt-efi.md5
 	cd /tmp && md5sum -c openwrt-efi.md5
 		if [ $? != 0 ]; then
 			echo "您下载固件失败，请检查网络重试!"
