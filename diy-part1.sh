@@ -18,6 +18,7 @@ rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined.img.gz
 rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-rootfs.img.gz
 rm -rf  bin/targets/x86/64/openwrt-x86-64-generic.manifest
 rm -rf  bin/targets/x86/64/profiles.json
+rm -rf  bin/targets/x86/64/sha256sums
 tag_version=`cat files/etc/op_version`
 echo $tag_version >  wget/tag_version
 openwrtEfi=openwrt-x86-64-generic-squashfs-combined-efi.img.gz
