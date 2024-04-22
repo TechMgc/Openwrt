@@ -6,9 +6,9 @@ mkdir -p files/usr/share
 mkdir -p files/etc/
 mkdir wget
 touch files/etc/op_version
-touch files/usr/share/opUpdate.sh
+touch files/usr/share/opupdate.sh
 
-cat>deleteFiles.sh<<-\EOF
+cat>deletefiles.sh<<-\EOF
 #!/bin/bash
 rm -rf  bin/targets/x86/64/config.buildinfo
 rm -rf  bin/targets/x86/64/feeds.buildinfo
@@ -21,27 +21,27 @@ rm -rf  bin/targets/x86/64/profiles.json
 rm -rf  bin/targets/x86/64/sha256sums
 tag_version=`cat files/etc/op_version`
 echo $tag_version >  wget/tag_version
-openwrtEfi=openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+openwrtefi=openwrt-x86-64-generic-squashfs-combined-efi.img.gz
 cd bin/targets/x86/64
-md5sum $openwrtEfi > openwrt-efi.md5
+md5sum $openwrtefi > openwrt-efi.md5
 exit 0
 EOF
 
-cat>opVersion.sh<<-\EOOF
+cat>opversion.sh<<-\EOOF
 #!/bin/bash
 op_version="V`date '+%y%m%d%H%M'`" 
 echo $op_version >  files/etc/op_version  
-grep "opUpdate.sh"  package/lean/default-settings/files/zzz-default-settings
+grep "opupdate.sh"  package/lean/default-settings/files/zzz-default-settings
 if [ $? != 0 ]; then
 	sed -i 's/exit 0/ /'  package/lean/default-settings/files/zzz-default-settings
 	cat>> package/lean/default-settings/files/zzz-default-settings<<-EOF
-	sed -i '$ a alias opupdate="sh /usr/share/opUpdate.sh"' /etc/profile
+	sed -i '$ a alias opupdate="sh /usr/share/opupdate.sh"' /etc/profile
         exit 0
 	EOF
 fi
 EOOF
 
-cat>files/usr/share/opUpdate.sh<<-\EOF
+cat>files/usr/share/opupdate.sh<<-\EOF
 #!/bin/bash
 #检测准备
 if [ ! -f  "/etc/op_version" ]; then
