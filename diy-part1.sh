@@ -21,6 +21,7 @@ rm -rf  bin/targets/x86/64/profiles.json
 tag_version=`cat files/etc/op_version`
 echo $tag_version >  wget/tag_version
 openwrtEfi=openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+cd bin/targets/x86/64
 md5sum $openwrtEfi > openwrt-efi.md5
 exit 0
 EOF
