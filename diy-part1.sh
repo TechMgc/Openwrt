@@ -5,23 +5,36 @@ echo 'src-git design https://github.com/gngpp/luci-theme-design' >>feeds.conf.de
 mkdir -p files/usr/share
 mkdir -p files/etc/
 touch files/etc/op_version
-touch files/usr/share/OpUpdate.sh
+touch files/usr/share/opUpdate.sh
+
+cat>deleteFiles.sh<<-\EOF
+#!/bin/bash
+rm -rf  bin/targets/x86/64/config.buildinfo
+rm -rf  bin/targets/x86/64/feeds.buildinfo
+rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-kernel.bin
+rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined.vmdk
+rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined.img.gz
+rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-rootfs.img.gz
+rm -rf  bin/targets/x86/64/openwrt-x86-64-generic.manifest
+rm -rf  bin/targets/x86/64/profiles.json
+exit 0
+EOF
 
 cat>op_version.sh<<-\EOOF
 #!/bin/bash
-op_version="`date '+%y%m%d%H%M'`" 
+op_version="V`date '+%y%m%d%H%M'`" 
 echo $op_version >  files/etc/op_version  
-grep "OpUpdate.sh"  package/lean/default-settings/files/zzz-default-settings
+grep "opUpdate.sh"  package/lean/default-settings/files/zzz-default-settings
 if [ $? != 0 ]; then
 	sed -i 's/exit 0/ /'  package/lean/default-settings/files/zzz-default-settings
 	cat>> package/lean/default-settings/files/zzz-default-settings<<-EOF
-	sed -i '$ a alias opupdate="sh /usr/share/OpUpdate.sh"' /etc/profile
+	sed -i '$ a alias opupdate="sh /usr/share/opUpdate.sh"' /etc/profile
         exit 0
 	EOF
 fi
 EOOF
 
-cat>files/usr/share/OpUpdate.sh<<-\EOF
+cat>files/usr/share/opUpdate.sh<<-\EOF
 #!/bin/bash
 # https://github.com/Blueplanet20120/Actions-OpenWrt-x86
 # Actions-OpenWrt-x86 By Lenyu 20210505
@@ -30,7 +43,7 @@ cat>files/usr/share/OpUpdate.sh<<-\EOF
 #检测准备
 if [ ! -f  "/etc/op_version" ]; then
 	echo
-	echo -e "\033[31m 该脚本在非Lenyu固件上运行，为避免不必要的麻烦，准备退出… \033[0m"
+	echo -e "\033[31m s1… \033[0m"
 	echo
 	exit 0
 fi
