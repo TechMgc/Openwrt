@@ -4,6 +4,7 @@ echo 'src-git design https://github.com/gngpp/luci-theme-design' >>feeds.conf.de
 
 mkdir -p files/usr/share
 mkdir -p files/etc/
+mkdir wget
 touch files/etc/op_version
 touch files/usr/share/opUpdate.sh
 
@@ -17,6 +18,8 @@ rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined.img.gz
 rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-rootfs.img.gz
 rm -rf  bin/targets/x86/64/openwrt-x86-64-generic.manifest
 rm -rf  bin/targets/x86/64/profiles.json
+tag_version=`cat files/etc/op_version`
+echo $tag_version >  wget/tag_version
 openwrtEfi=openwrt-x86-64-generic-squashfs-combined-efi.img.gz
 md5sum $openwrtEfi > openwrt-efi.md5
 exit 0
