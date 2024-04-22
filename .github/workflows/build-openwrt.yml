@@ -174,7 +174,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "release_tag=$(cat openwrt/wget/op_version)" >> $GITHUB_OUTPUT
+        echo "release_tag=$(cat openwrt/etc/op_version)" >> $GITHUB_OUTPUT
         echo -e "\n* The stable source code has been updated." >> release.txt
         sed -i '1i ## Firmware Update Log' release.txt
         touch release.txt
