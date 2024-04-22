@@ -45,7 +45,7 @@ cat>files/usr/share/opUpdate.sh<<-\EOF
 #检测准备
 if [ ! -f  "/etc/op_version" ]; then
 	echo
-	echo -e "\033[31m 找不到版本信息… \033[0m"
+	echo -e "\033[31m 找不到本地版本信息… \033[0m"
 	echo
 	exit 0
 fi
@@ -59,7 +59,7 @@ if [ -s  "/tmp/cloud_version" ]; then
 	DOWNLOAD_URL=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
 	openwrt-efi=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt-efi.md5
 else
-	echo "请检测网络或重试！"
+	echo "无法获取到云端版本号！"
 	exit 1
 fi
 #md5值验证，固件类型判断
@@ -68,14 +68,14 @@ if [ "$current_version" != "$cloud_version" ];then
 	wget -P /tmp "$openwrt-efi" -O /tmp/openwrt-efi.md5
 	cd /tmp && md5sum -c openwrt-efi.md5
 		if [ $? != 0 ]; then
-			echo "您下载文件失败，请检查网络重试…"
+			echo "您下载固件失败，请检查网络重试!"
 			sleep 1
 			exit
 		fi
 	gzip -d /tmp/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
 	sysupgrade /tmp/openwrt-x86-64-generic-squashfs-combined-efi.img
 else
-	echo -e "\033[32m 已经是最新版本… \033[0m"
+	echo -e "\033[32m 已经是最新版本! \033[0m"
 	echo
 	exit
 fi
