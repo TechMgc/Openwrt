@@ -38,10 +38,6 @@ EOOF
 
 cat>files/usr/share/opUpdate.sh<<-\EOF
 #!/bin/bash
-# https://github.com/Blueplanet20120/Actions-OpenWrt-x86
-# Actions-OpenWrt-x86 By Lenyu 20210505
-#path=$(dirname $(readlink -f $0))
-# cd ${path}
 #检测准备
 if [ ! -f  "/etc/op_version" ]; then
 	echo
