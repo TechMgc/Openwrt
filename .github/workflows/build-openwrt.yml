@@ -85,7 +85,7 @@ jobs:
     - name: Op version
       run: |
         cd openwrt 
-        bash  opVersion.sh
+        bash  opversion.sh
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
@@ -135,7 +135,7 @@ jobs:
     - name: Delete files
       run: |
         cd openwrt 
-        bash  deleteFiles.sh
+        bash  deletefiles.sh
 
     - name: Organize files
       id: organize
