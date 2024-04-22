@@ -17,6 +17,8 @@ rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined.img.gz
 rm -rf  bin/targets/x86/64/openwrt-x86-64-generic-squashfs-rootfs.img.gz
 rm -rf  bin/targets/x86/64/openwrt-x86-64-generic.manifest
 rm -rf  bin/targets/x86/64/profiles.json
+openwrt-efi=openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+md5sum $openwrt-efi > openwrt-efi.md5
 exit 0
 EOF
 
@@ -48,67 +50,34 @@ if [ ! -f  "/etc/op_version" ]; then
 	exit 0
 fi
 rm -f /tmp/cloud_version
-# 获取固件云端版本号、内核版本号信息
+# 获取固件云端版本号、本地版本号信息
 current_version=`cat /etc/op_version`
-wget -qO- -t1 -T2 "https://api.github.com/repos/Blueplanet20120/Actions-OpenWrt-x86/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g;s/v//g'  > /tmp/cloud_ts_version
-if [ -s  "/tmp/cloud_ts_version" ]; then
-	cloud_version=`cat /tmp/cloud_ts_version | cut -d _ -f 1`
-	cloud_kernel=`cat /tmp/cloud_ts_version | cut -d _ -f 2`
+wget -qO- -t1 -T2 "https://api.github.com/repos/TechMgc/Openwrt/releases/latest" | grep "tag_name" | head -n 1 > /tmp/cloud_version
+if [ -s  "/tmp/cloud_version" ]; then
 	#固件下载地址
-	new_version=`cat /tmp/cloud_ts_version`
-	DEV_URL=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt_x86-64-${new_version}_sta_Lenyu.img.gz
-	DEV_UEFI_URL=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt_x86-64-${new_version}_uefi-gpt_sta_Lenyu.img.gz
-	openwrt_sta=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt_sta.md5
-	openwrt_sta_uefi=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt_sta_uefi.md5
+	new_version=`cat /tmp/cloud_version`
+	DOWNLOAD_URL=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+	openwrt-efi=https://github.com/Blueplanet20120/Actions-OpenWrt-x86/releases/download/${new_version}/openwrt-efi.md5
 else
 	echo "请检测网络或重试！"
 	exit 1
 fi
-####
-Firmware_Type="$(grep 'DISTRIB_ARCH=' /etc/openwrt_release | cut -d \' -f 2)"
-echo $Firmware_Type > /etc/lenyu_firmware_type
-echo
-if [[ "$cloud_kernel" =~ "4.19" ]]; then
-	echo
-	echo -e "\033[31m 该脚本在Lenyu固件Sta版本上运行，目前只建议在Dev版本上运行，准备退出… \033[0m"
-	echo
-	exit 0
-fi
 #md5值验证，固件类型判断
-if [ ! -d /sys/firmware/efi ];then
-	if [ "$current_version" != "$cloud_version" ];then
-		wget -P /tmp "$DEV_URL" -O /tmp/openwrt_x86-64-${new_version}_sta_Lenyu.img.gz
-		wget -P /tmp "$openwrt_sta" -O /tmp/openwrt_sta.md5
-		cd /tmp && md5sum -c openwrt_sta.md5
-		if [ $? != 0 ]; then
-		  echo "您下载文件失败，请检查网络重试…"
-		  sleep 4
-		  exit
-		fi
-		gzip -d /tmp/openwrt_x86-64-${new_version}_sta_Lenyu.img.gz
-		sysupgrade /tmp/openwrt_x86-64-${new_version}_sta_Lenyu.img
-	else
-		echo -e "\033[32m 本地已经是最新版本，还更个鸡巴毛啊… \033[0m"
-		echo
-		exit
-	fi
-else
-	if [ "$current_version" != "$cloud_version" ];then
-		wget -P /tmp "$DEV_UEFI_URL" -O /tmp/openwrt_x86-64-${new_version}_uefi-gpt_sta_Lenyu.img.gz
-		wget -P /tmp "$openwrt_sta_uefi" -O /tmp/openwrt_sta_uefi.md5
-		cd /tmp && md5sum -c openwrt_sta_uefi.md5
+if [ "$current_version" != "$cloud_version" ];then
+	wget -P /tmp "$DOWNLOAD_URL" -O /tmp/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+	wget -P /tmp "$openwrt-efi" -O /tmp/openwrt-efi.md5
+	cd /tmp && md5sum -c openwrt-efi.md5
 		if [ $? != 0 ]; then
 			echo "您下载文件失败，请检查网络重试…"
 			sleep 1
 			exit
 		fi
-		gzip -d /tmp/openwrt_x86-64-${new_version}_uefi-gpt_sta_Lenyu.img.gz
-		sysupgrade /tmp/openwrt_x86-64-${new_version}_uefi-gpt_sta_Lenyu.img
-	else
-		echo -e "\033[32m 本地已经是最新版本，还更个鸡巴毛啊… \033[0m"
-		echo
-		exit
-	fi
+	gzip -d /tmp/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
+	sysupgrade /tmp/openwrt-x86-64-generic-squashfs-combined-efi.img
+else
+	echo -e "\033[32m 已经是最新版本… \033[0m"
+	echo
+	exit
 fi
 
 exit 0
