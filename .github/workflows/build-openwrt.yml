@@ -3,9 +3,8 @@ name: Build OpenWrt
 on:
   repository_dispatch:
   workflow_dispatch:
-    
-  #schedule:
-     #- cron: 00 22 * * *   
+  schedule:
+     - cron: 0 3 */26 * *   
   
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -158,7 +157,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "release_tag=$(cat openwrt/etc/op_version)" >> $GITHUB_OUTPUT
+        echo "release_tag=$(cat openwrt/wget/tag_version)" >> $GITHUB_OUTPUT
         echo -e "\n* The stable source code has been updated." >> release.txt
         sed -i '1i ## Firmware Update Log' release.txt
         touch release.txt
